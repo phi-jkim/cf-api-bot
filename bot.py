@@ -1,66 +1,84 @@
-# Import discord.py. Allows access to Discord's API.
 import discord
-
-# Import the os module.
+import random
 import os
 
-# Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
-
-# Import commands from the discord.ext module.
 from discord.ext import commands
 
-# Loads the .env file that resides on the same level as the script.
 load_dotenv()
-
-# Grab the API token from the .env file.
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
-# Creates a new Bot object with a specified prefix. It can be whatever you want it to be.
 bot = commands.Bot(command_prefix="$")
 
-# on_message() event listener. Notice it is using @bot.event as opposed to @bot.command().
 @bot.event
 async def on_message(message):
-	# Check if the message sent to the channel is "hello".
 	if message.content == "$hey jinha":
-		# Sends a message to the channel.
 		await message.channel.send("hello jinha kim.")
-	# Includes the commands for the bot. Without this line, you cannot trigger your commands.
 	await bot.process_commands(message)
+	if message.content == "$permissions": 
+		x = random.randint(0,2) 
+		if x == 1: 
+			await message.channel.send("No")
+		else: 
+			await message.channel.send("Yes") 
 
-# Command $ping. Invokes only when the message "$ping" is send in the Discord server.
-# Alternatively @bot.command(name="ping") can be used if another function name is desired.
-@bot.command(
-	# Adds this value to the $help ping message.
-	help="Uses come crazy logic to determine if pong is actually the correct value or not.",
-	# Adds this value to the $help message.
-	brief="Prints pong back to the channel."
+@bot.command (
+	help = "intro nice message"
 )
+
 async def ping(ctx):
-	# Sends a message to the channel using the Context object.
 	await ctx.channel.send("yoooo jinha kim, are you really so legendary... huh?")
 
+@bot.command (
+	help = "motivational life message" 
+) 	
+
 async def life(ctx):
-	# Sends a message to the channel using the Context object.
 	await ctx.channel.send("a good life awaits you")
 
-# Command $print. This takes an in a list of arguments from the user and simply prints the values back to the channel.
 @bot.command(
-	# Adds this value to the $help print message.
-	help="A new life is awaiting you",
-	# Adds this value to the $help message.
+	help="help message",
 	brief="Prints the list of values back to the channel."
 )
+
 async def print(ctx, *args):
 	response = ""
-
-	# Loops through the list of arguments that the user inputs.
 	for arg in args:
 		response = response + " " + arg
-
-	# Sends a message to the channel using the Context object.
 	await ctx.channel.send(response)
 
-# Executes the bot with the specified token. Token has been removed and used just as an example.
+@bot.command(
+	help="joke"
+)
+
+async def joke(ctx, *args): 
+	response = "" 
+	for arg in args: 
+		response = response + " " + arg 
+	response = response.split()
+	ind = -1 
+	for x in range(1, len(response)): 
+		if response[x] == 'is':
+			ind = x 
+			break 
+	if ind != -1: 
+		await ctx.channel.send("no, " + response[ind-1] + " is " + response[ind-1])
+
+@bot.command(
+	help="game"
+)
+
+async def game(ctx, *args): 
+	ans = random.randint(0, 10)
+	res = False
+	for arg in args: 
+		if int(arg) == ans: 
+			res = True 
+
+	if res: 
+		await ctx.channel.send("YES! HOW!?") 
+	else: 
+		await ctx.channel.send("YEPP, I thought so!") 
+
 bot.run(DISCORD_TOKEN)
+
