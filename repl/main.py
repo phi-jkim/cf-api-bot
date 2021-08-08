@@ -75,7 +75,6 @@ async def calc(ctx, *args):
   elif '%' in s: 
     s = s.split('%') 
     ans += int(s[0]) % int(s[1]) 
-	
   await ctx.channel.send('```' + str(ans) + '```')
 
 @bot.command (help="joke")
